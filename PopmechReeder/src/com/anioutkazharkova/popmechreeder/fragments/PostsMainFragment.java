@@ -347,9 +347,15 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 					// .show();
 				}
 			}
-		} else
+		}
+		 else
 			setFavorites(category,savePosition);
 		}
+		else
+		{
+			setFoundPosts();
+		}
+		
 	}
 
 	public void updateCompanyView(PostData post) {
@@ -609,6 +615,14 @@ if (Utility.IS_SHOW_IMAGES)
 			}
 		}
 		isFound=true;
+		setFoundPosts();
+		
+		}
+		
+	}
+	
+	private void setFoundPosts() {
+		// TODO Auto-generated method stub
 		if (Utility.IS_LIST||!Utility.IS_SHOW_IMAGES)
 		{
 		mAdapter=new PostDataAdapter(mContext, foundPosts);
@@ -650,11 +664,8 @@ if (Utility.IS_SHOW_IMAGES)
 						}
 					}, 500);
 		}
-		
-		}
-		
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
