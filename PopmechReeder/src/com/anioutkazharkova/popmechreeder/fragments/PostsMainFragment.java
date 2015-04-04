@@ -27,6 +27,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -71,10 +72,12 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 	Handler handler = new Handler();
 	private LinearLayout mainLayout;
 	private PostGridAdapter gdAdapter;
-	private int currentListPosition=-1;
+	private int currentListPosition = -1;
 	private int previousPosition;
 	private boolean isFound;
-	private ArrayList<PostData> foundPosts=new ArrayList<PostData>();
+	private ArrayList<PostData> foundPosts = new ArrayList<PostData>();
+
+	private GridView gridView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -83,9 +86,10 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 		View view = inflater.inflate(R.layout.main_activity, null);
 		mainLayout = (LinearLayout) view.findViewById(R.id.mainLayout);
 		listView = (ListView) view.findViewById(R.id.lvPosts);
+		gridView=(GridView)view.findViewById(R.id.gdPosts);
 
 		mAdapter = new PostDataAdapter(this.getActivity());
-		gdAdapter = new PostGridAdapter(getActivity());
+		gdAdapter = new PostGridAdapter(this.getActivity());
 
 		// gridView.setAdapter(gdAdapter);
 
@@ -117,17 +121,16 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 		}
 
 		turnOnMenu(1);
-		setStartContent(currentCategory,false);
+		//setStartContent(currentCategory, false);
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
-
-			
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				PostData p = isFound?foundPosts.get(position):list.get(position);
+				PostData p = isFound ? foundPosts.get(position) : list
+						.get(position);
 				Intent postIntent = new Intent(getActivity(),
 						PostActivity.class);
 				postIntent.putExtra("post", p);
@@ -135,25 +138,43 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 				getActivity().startActivityForResult(postIntent, 1234);
 			}
 		});
-		listView.setOnScrollListener(new OnScrollListener() {
+		
+		gridView.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				PostData p = isFound ? foundPosts.get(position) : list
+						.get(position);
+				Intent postIntent = new Intent(getActivity(),
+						PostActivity.class);
+				postIntent.putExtra("post", p);
+				postIntent.putExtra("position", position);
+				getActivity().startActivityForResult(postIntent, 1234);
+			}
+		});
+		
+		gridView.setOnScrollListener(new OnScrollListener() {
+			
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				// TODO Auto-generated method stub
-
+				
 			}
-
+			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
+
 				firstItem = firstVisibleItem;
 				if (firstItem > lastItem) {
 
-					if (listView.getLastVisiblePosition() == (Utility.IS_LIST?(mAdapter
-							.getCount() - 1):(gdAdapter.getCount()-1)) && !isFound) {
+					if (gridView.getLastVisiblePosition() == (Utility.IS_LIST ? (mAdapter
+							.getCount() - 1) : (gdAdapter.getCount() - 1))
+							&& !isFound) {
 						progress.show();
-						currentListPosition=listView.getLastVisiblePosition();
+						currentListPosition = gridView.getLastVisiblePosition();
 						if (list != null && list.size() > 0 && temp != null
 								&& temp.size() >= 10) {
 
@@ -171,55 +192,160 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 								} else {
 									gdAdapter = new PostGridAdapter(mContext,
 											temp);
-									listView.setAdapter(gdAdapter);
+									gridView.setAdapter(gdAdapter);
 								}
 								if (shift + 10 <= list.size()) {
 									shift += 10;
 								} else {
 									shift = list.size();
 								}
-								if (Utility.IS_SHOW_IMAGES)
-								{
-								int i = 0;
-								do {
-									final PostData p = temp.get(i);
-									handler.postDelayed(new Runnable() {
+								if (Utility.IS_SHOW_IMAGES) {
+									int i = 0;
+									do {
+										final PostData p = temp.get(i);
+										handler.postDelayed(new Runnable() {
 
-										@Override
-										public void run() {
-											// TODO Auto-generated method stub
-											if (Utility
-													.hasNetworkConnection(mContext)) {
-												if (p.getImageBitmap() == null) {
-													try {
-														p.setImageBitmap(new ImageDownloaderTask(
-																progress,
-																mContext)
-																.executeOnExecutor(
-																		AsyncTask.SERIAL_EXECUTOR,
-																		p.getUrlImage())
-																.get());
+											@Override
+											public void run() {
+												// TODO Auto-generated method
+												// stub
+												if (Utility
+														.hasNetworkConnection(mContext)) {
+													if (p.getImageBitmap() == null) {
+														try {
+															p.setImageBitmap(new ImageDownloaderTask(
+																	progress,
+																	mContext)
+																	.executeOnExecutor(
+																			AsyncTask.SERIAL_EXECUTOR,
+																			p.getUrlImage())
+																	.get());
 
-														updateCompanyView(p,
-																true);
+															updateCompanyView(
+																	p, true);
 
-													} catch (InterruptedException e) {
-														// TODO Auto-generated
-														// catch
-														// block
-														e.printStackTrace();
-													} catch (ExecutionException e) {
-														// TODO Auto-generated
-														// catch
-														// block
-														e.printStackTrace();
+														} catch (InterruptedException e) {
+															// TODO
+															// Auto-generated
+															// catch
+															// block
+															e.printStackTrace();
+														} catch (ExecutionException e) {
+															// TODO
+															// Auto-generated
+															// catch
+															// block
+															e.printStackTrace();
+														}
 													}
 												}
+
 											}
-										}
-									}, (i + 1) * 50);
-									i += 1;
-								} while (i < temp.size());
+										}, (i + 1) * 50);
+										i += 1;
+									} while (i < temp.size());
+								}
+								// loadDialog.Finish();
+
+								gridView.setSelection(currentListPosition);
+							}
+
+						}
+						progress.dismiss();
+					}
+				}
+				lastItem = firstItem;
+			}
+		});
+		listView.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				firstItem = firstVisibleItem;
+				if (firstItem > lastItem) {
+
+					if (listView.getLastVisiblePosition() == (Utility.IS_LIST ? (mAdapter
+							.getCount() - 1) : (gdAdapter.getCount() - 1))
+							&& !isFound) {
+						progress.show();
+						currentListPosition = listView.getLastVisiblePosition();
+						if (list != null && list.size() > 0 && temp != null
+								&& temp.size() >= 10) {
+
+							// List<PostData>
+							if (shift < list.size()) {
+								// loadDialog.show(getFragmentManager(),
+								// "dialog");
+
+								temp = list.subList(0,
+										Math.min(10 + shift, list.size()));
+								if (Utility.IS_LIST || !Utility.IS_SHOW_IMAGES) {
+									mAdapter = new PostDataAdapter(mContext,
+											temp);
+									listView.setAdapter(mAdapter);
+								} else {
+									gdAdapter = new PostGridAdapter(mContext,
+											temp);
+									gridView.setAdapter(gdAdapter);
+								}
+								if (shift + 10 <= list.size()) {
+									shift += 10;
+								} else {
+									shift = list.size();
+								}
+								if (Utility.IS_SHOW_IMAGES) {
+									int i = 0;
+									do {
+										final PostData p = temp.get(i);
+										handler.postDelayed(new Runnable() {
+
+											@Override
+											public void run() {
+												// TODO Auto-generated method
+												// stub
+												if (Utility
+														.hasNetworkConnection(mContext)) {
+													if (p.getImageBitmap() == null) {
+														try {
+															p.setImageBitmap(new ImageDownloaderTask(
+																	progress,
+																	mContext)
+																	.executeOnExecutor(
+																			AsyncTask.SERIAL_EXECUTOR,
+																			p.getUrlImage())
+																	.get());
+
+															updateCompanyView(
+																	p, true);
+
+														} catch (InterruptedException e) {
+															// TODO
+															// Auto-generated
+															// catch
+															// block
+															e.printStackTrace();
+														} catch (ExecutionException e) {
+															// TODO
+															// Auto-generated
+															// catch
+															// block
+															e.printStackTrace();
+														}
+													}
+												}
+
+											}
+										}, (i + 1) * 50);
+										i += 1;
+									} while (i < temp.size());
 								}
 								// loadDialog.Finish();
 
@@ -246,18 +372,15 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 	public void resetTheme() {
 		mainLayout.setBackgroundColor(getActivity().getResources().getColor(
 				Utility.IS_LIGHT ? R.color.smockie : R.color.dark));
-		if (Utility.IS_LIST||!Utility.IS_SHOW_IMAGES)
-		{
-		ArrayList<PostData> posts = mAdapter.getPosts();
-		mAdapter = new PostDataAdapter(mContext, posts);
-		listView.setAdapter(mAdapter);
-		}
-		else
-		{
+		/*if (Utility.IS_LIST || !Utility.IS_SHOW_IMAGES) {
+			ArrayList<PostData> posts = mAdapter.getPosts();
+			mAdapter = new PostDataAdapter(mContext, posts);
+			listView.setAdapter(mAdapter);
+		} else {
 			ArrayList<PostData> posts = gdAdapter.getPosts();
 			gdAdapter = new PostGridAdapter(mContext, posts);
 			listView.setAdapter(gdAdapter);
-		}
+		}*/
 	}
 
 	public void setFavorites(Category category, boolean savePosition) {
@@ -278,6 +401,7 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 		} else {
 			mAdapter = new PostDataAdapter(mContext);
 			listView.setAdapter(mAdapter);
+			gridView.setAdapter(new PostGridAdapter(getActivity()));
 		}
 	}
 
@@ -304,58 +428,65 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 		if (list != null && list.size() > 0) {
 			setFirstPosts(false);
 		} else {
-			if (Utility.hasNetworkConnection(mContext)) {
+			if (Utility.hasNetworkConnection(getActivity())) {
 				getNewPosts();
+			} else {
+				NetworkDialog netDialog = new NetworkDialog();
+				netDialog.show(getFragmentManager(), "net_dialog");
+				if (isRefreshing) {
+					isRefreshing = false;
+					swipeLayout.setRefreshing(isRefreshing);
+				}
 			}
 		}
 	}
 
-	public void setStartContent(final Category category,boolean savePosition) {
+	public void setStartContent(final Category category, boolean savePosition) {
 		// Toast.makeText(getActivity(), "Ask by category" + category.getName(),
 		// Toast.LENGTH_LONG).show();
-		
+
 		shift = 0;
 		if (category != null)
 			currentCategory = category;
-		if (!isFound)
-		{
-		if (currentPosition > 0) {
-			progress.show();
-			// loadDialog.show(getFragmentManager(), "dialog");
+		if (!isFound) {
+			if (currentPosition > 0) {
+				progress.show();
+				// loadDialog.show(getFragmentManager(), "dialog");
 
-			try {
-				list = new CachedPostsTask(mContext, currentCategory.getName(),
-						progress).executeOnExecutor(
-						AsyncTask.THREAD_POOL_EXECUTOR,
-						currentCategory.getName()).get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// //loadDialog.dismiss();
-			if (list != null && list.size() > 0) {
-				setFirstPosts(savePosition);
-			} else {
-				if (Utility.hasNetworkConnection(mContext)) {
-					getNewPostsByCategory(currentCategory);
-					// Toast.makeText(getActivity(), "new posts",
-					// Toast.LENGTH_LONG)
-					// .show();
+				try {
+					list = new CachedPostsTask(mContext,
+							currentCategory.getName(), progress)
+							.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+									currentCategory.getName()).get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			}
-		}
-		 else
-			setFavorites(category,savePosition);
-		}
-		else
-		{
+
+				// //loadDialog.dismiss();
+				if (list != null && list.size() > 0) {
+					setFirstPosts(savePosition);
+				} else {
+					if (Utility.hasNetworkConnection(getActivity())) {
+						getNewPostsByCategory(currentCategory);
+					} else {
+						NetworkDialog netDialog = new NetworkDialog();
+						netDialog.show(getFragmentManager(), "net_dialog");
+						if (isRefreshing) {
+							isRefreshing = false;
+							swipeLayout.setRefreshing(isRefreshing);
+						}
+					}
+				}
+			} else
+				setFavorites(category, savePosition);
+		} else {
 			setFoundPosts();
 		}
-		
+
 	}
 
 	public void updateCompanyView(PostData post) {
@@ -396,25 +527,21 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 
 		}
 		if (flag) {
-			
 
-				if (Utility.IS_LIST || !Utility.IS_SHOW_IMAGES) {
-					mAdapter = new PostDataAdapter(mContext, temp);
-					listView.setAdapter(mAdapter);
-					listView.setSelection(position);
-				} else {
-					gdAdapter = new PostGridAdapter(mContext, temp);
-					listView.setAdapter(gdAdapter);
-					listView.setSelection(position);
-				}
-		
+			if (Utility.IS_LIST || !Utility.IS_SHOW_IMAGES) {
+				mAdapter = new PostDataAdapter(mContext, temp);
+				listView.setAdapter(mAdapter);
+				listView.setSelection(position);
+			} else {
+				gdAdapter = new PostGridAdapter(mContext, temp);
+				gridView.setAdapter(gdAdapter);
+				gridView.setSelection(position);
+			}
 
 		}
-		
 
-			listView.invalidateViews();
+		listView.invalidateViews();
 
-		
 	}
 
 	private void getNewPosts() {
@@ -435,7 +562,7 @@ public class PostsMainFragment extends Fragment implements OnRefreshListener {
 	}
 
 	public void turnOnMenu(final int position) {
-previousPosition=currentPosition;
+		previousPosition = currentPosition;
 		if (position != -1) {
 			currentPosition = position;
 		}
@@ -453,7 +580,7 @@ previousPosition=currentPosition;
 			@Override
 			public boolean onNavigationItemSelected(int itemPosition,
 					long itemId) {
-				if (itemPosition > 0 && previousPosition!=itemPosition) {
+				if (itemPosition > 0 && previousPosition != itemPosition) {
 
 					currentCategory.setUrl(links[itemPosition]);
 					currentCategory.setName(cats[itemPosition]);
@@ -465,10 +592,10 @@ previousPosition=currentPosition;
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							
-							setStartContent(currentCategory,false);
+
+							setStartContent(currentCategory, false);
 						}
-					},200);
+					}, 200);
 
 				} else if (itemPosition == 0) {
 					currentCategory.setName(cats[itemPosition]);
@@ -478,9 +605,9 @@ previousPosition=currentPosition;
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							setFavorites(currentCategory,false);
+							setFavorites(currentCategory, false);
 						}
-					},200);
+					}, 200);
 
 				}
 				currentPosition = itemPosition;
@@ -490,7 +617,7 @@ previousPosition=currentPosition;
 
 		getActivity().getActionBar().setListNavigationCallbacks(adapter,
 				navigationListener);
-	
+
 		getActivity().getActionBar().setSelectedNavigationItem(currentPosition);
 
 	}
@@ -517,9 +644,9 @@ previousPosition=currentPosition;
 	private void setFirstPosts(boolean savePosition) {
 		if (list != null && list.size() > 0) {
 			// List<PostData>
-			isFound=false;
+			isFound = false;
 			shift = 0;
-			 currentListPosition=0;
+			currentListPosition = 0;
 
 			temp = list.subList(0, Math.min(list.size(), 10));
 			if (Utility.IS_LIST || !Utility.IS_SHOW_IMAGES) {
@@ -527,23 +654,115 @@ previousPosition=currentPosition;
 				mAdapter = new PostDataAdapter(mContext, temp);
 				listView.setAdapter(mAdapter);
 				listView.setSelection(currentListPosition);
+				gridView.setAdapter(new PostGridAdapter(this.getActivity()));
 			} else {
 
 				gdAdapter = new PostGridAdapter(mContext, temp);
-				listView.setAdapter(gdAdapter);
-				listView.setSelection(currentListPosition);
+				gridView.setAdapter(gdAdapter);
+				//listView.setSelection(currentListPosition);
+				listView.setAdapter(new PostDataAdapter(getActivity()));
 
 			}
 			shift += temp.size();
-if (Utility.IS_SHOW_IMAGES)
-{
+			if (Utility.IS_SHOW_IMAGES) {
+				handler.postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						for (PostData p : temp) {
+							if (Utility.hasNetworkConnection(getActivity())) {
+								if (p.getImageBitmap() == null) {
+									try {
+										p.setImageBitmap(new ImageDownloaderTask(
+												progress, mContext)
+												.executeOnExecutor(
+														AsyncTask.THREAD_POOL_EXECUTOR,
+														p.getUrlImage()).get());
+										updateCompanyView(p, true);
+									} catch (InterruptedException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									} catch (ExecutionException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+
+								}
+							}
+						}
+					}
+				}, 500);
+			}
+		}
+		if (isRefreshing) {
+			isRefreshing = false;
+			swipeLayout.setRefreshing(isRefreshing);
+		} else
+			progress.dismiss();
+		// loadDialog.Finish();
+
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		// TODO Auto-generated method stub
+		inflater.inflate(R.menu.popmech_main, menu);
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		SearchView mSearchView = (SearchView) searchItem.getActionView();
+		mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// TODO Auto-generated method stub
+				if (query != "") {
+					searchQuery(query);
+				}
+				return true;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+	}
+
+	private void searchQuery(String query) {
+		if (list != null && list.size() > 0) {
+			foundPosts = new ArrayList<PostData>();
+			for (PostData p : list) {
+				if (p.getTitle().toLowerCase().contains(query.toLowerCase())) {
+					foundPosts.add(p);
+				}
+			}
+			isFound = true;
+			setFoundPosts();
+
+		}
+
+	}
+
+	private void setFoundPosts() {
+		// TODO Auto-generated method stub
+		if (Utility.IS_LIST || !Utility.IS_SHOW_IMAGES) {
+			mAdapter = new PostDataAdapter(mContext, foundPosts);
+			listView.setAdapter(mAdapter);
+			gridView.setAdapter(new PostGridAdapter(getActivity()));
+		} else {
+			gdAdapter = new PostGridAdapter(mContext, foundPosts);
+			gridView.setAdapter(gdAdapter);
+			listView.setAdapter(new PostDataAdapter(getActivity()));
+		}
+		if (Utility.IS_SHOW_IMAGES) {
 			handler.postDelayed(new Runnable() {
 
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					for (PostData p : temp) {
-						if (Utility.hasNetworkConnection(mContext)) {
+					for (PostData p : foundPosts) {
+						if (Utility.hasNetworkConnection(getActivity())) {
 							if (p.getImageBitmap() == null) {
 								try {
 									p.setImageBitmap(new ImageDownloaderTask(
@@ -565,104 +784,6 @@ if (Utility.IS_SHOW_IMAGES)
 					}
 				}
 			}, 500);
-}
-		}
-		if (isRefreshing) {
-			isRefreshing = false;
-			swipeLayout.setRefreshing(isRefreshing);
-		} else
-			progress.dismiss();
-		// loadDialog.Finish();
-
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
-		inflater.inflate(R.menu.popmech_main, menu);
-		MenuItem searchItem=menu.findItem(R.id.action_search);
-		SearchView mSearchView = (SearchView) searchItem.getActionView();
-		mSearchView.setOnQueryTextListener(new OnQueryTextListener() {
-			
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				// TODO Auto-generated method stub
-				if (query!="")
-				{
-					searchQuery(query);
-				}
-				return true;
-			}
-			
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				// TODO Auto-generated method stub
-				return false;
-			}
-		});
-	}
-
-	private void searchQuery(String query)
-	{
-		if (list!=null && list.size()>0)
-		{
-		 foundPosts=new ArrayList<PostData>();
-		for(PostData p: list)
-		{
-			if (p.getTitle().toLowerCase().contains(query.toLowerCase()))
-			{
-				foundPosts.add(p);
-			}
-		}
-		isFound=true;
-		setFoundPosts();
-		
-		}
-		
-	}
-	
-	private void setFoundPosts() {
-		// TODO Auto-generated method stub
-		if (Utility.IS_LIST||!Utility.IS_SHOW_IMAGES)
-		{
-		mAdapter=new PostDataAdapter(mContext, foundPosts);
-		listView.setAdapter(mAdapter);
-		}
-		else
-		{
-			gdAdapter=new PostGridAdapter(mContext, foundPosts);
-			listView.setAdapter(gdAdapter);
-		}
-		if (Utility.IS_SHOW_IMAGES)
-		{
-					handler.postDelayed(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							for (PostData p : foundPosts) {
-								if (Utility.hasNetworkConnection(mContext)) {
-									if (p.getImageBitmap() == null) {
-										try {
-											p.setImageBitmap(new ImageDownloaderTask(
-													progress, mContext)
-													.executeOnExecutor(
-															AsyncTask.THREAD_POOL_EXECUTOR,
-															p.getUrlImage()).get());
-											updateCompanyView(p, true);
-										} catch (InterruptedException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										} catch (ExecutionException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
-
-									}
-								}
-							}
-						}
-					}, 500);
 		}
 	}
 
@@ -670,24 +791,7 @@ if (Utility.IS_SHOW_IMAGES)
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
-		/*case R.id.itemRefresh:
 
-			/*handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					if (currentPosition > 0) {
-						if (Utility.hasNetworkConnection(mContext)) {
-							getNewPostsByCategory(currentCategory);
-						}
-					} else
-						setFavorites(currentCategory,false);
-
-				}
-			}, 300);
-
-			break;*/
 		case R.id.itemSettings:
 			getActivity().startActivityForResult(
 					new Intent(this.getActivity(), SettingsActivity.class),
@@ -701,7 +805,7 @@ if (Utility.IS_SHOW_IMAGES)
 	public void onRefresh() {
 		// TODO Auto-generated method stub
 		isRefreshing = true;
-isFound=false;
+		isFound = false;
 		// progress.show();
 		handler.postDelayed(new Runnable() {
 
@@ -709,12 +813,19 @@ isFound=false;
 			public void run() {
 				// TODO Auto-generated method stub
 				if (currentPosition > 0) {
-					if (Utility.hasNetworkConnection(mContext)) {
+					if (Utility.hasNetworkConnection(getActivity())) {
 						getNewPostsByCategory(currentCategory);
-						
+
+					} else {
+						NetworkDialog netDialog = new NetworkDialog();
+						netDialog.show(getFragmentManager(), "net_dialog");
+						if (isRefreshing) {
+							isRefreshing = false;
+							swipeLayout.setRefreshing(isRefreshing);
+						}
 					}
 				} else
-					setFavorites(currentCategory,false);
+					setFavorites(currentCategory, false);
 
 			}
 		}, 300);
@@ -722,21 +833,27 @@ isFound=false;
 
 	public void changeFavorite(int position) {
 		// TODO Auto-generated method stub
-		ArrayList<PostData> temp=(Utility.IS_LIST)?mAdapter.getPosts():gdAdapter.getPosts();
-		PostData p=(PostData) temp.get(position);
+		ArrayList<PostData> temp = (Utility.IS_LIST) ? mAdapter.getPosts()
+				: gdAdapter.getPosts();
+		PostData p = (PostData) temp.get(position);
 		p.setFavorite(!p.isFavorite());
-		int cursor=listView.getFirstVisiblePosition();
-		if (Utility.IS_LIST)
-		{
-			mAdapter=new PostDataAdapter(mContext, temp);
+		
+		if (Utility.IS_LIST) {
+			int cursor = listView.getFirstVisiblePosition();
+			mAdapter = new PostDataAdapter(mContext, temp);
 			listView.setAdapter(mAdapter);
+			gridView.setAdapter(new PostGridAdapter(getActivity()));
+			listView.setSelection(cursor);
+		} else {
+			int cursor = gridView.getFirstVisiblePosition();
+			gdAdapter = new PostGridAdapter(mContext, temp);
+			gridView.setAdapter(gdAdapter);
+			gridView.setSelection(cursor);
+			listView.setAdapter(new PostDataAdapter(getActivity()));
 		}
-		else{
-			gdAdapter=new PostGridAdapter(mContext, temp);
-			listView.setAdapter(gdAdapter);
-		}
-		listView.setSelection(cursor);
+		
 		listView.invalidateViews();
+		gridView.invalidateViews();
 	}
 
 }

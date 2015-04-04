@@ -70,34 +70,35 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int default_image=0x7f020000;
-        public static final int favorite=0x7f020001;
-        public static final int favorite_grey=0x7f020002;
-        public static final int favorite_white=0x7f020003;
-        public static final int grid=0x7f020004;
-        public static final int grid_back=0x7f020005;
-        public static final int grid_gray=0x7f020006;
-        public static final int grid_selected=0x7f020007;
-        public static final int grid_white=0x7f020008;
-        public static final int heart=0x7f020009;
-        public static final int heart_shape=0x7f02000a;
-        public static final int ic_action_favorite=0x7f02000b;
-        public static final int ic_action_refresh=0x7f02000c;
-        public static final int ic_action_share=0x7f02000d;
-        public static final int ic_launcher=0x7f02000e;
-        public static final int icon=0x7f02000f;
-        public static final int infav=0x7f020010;
-        public static final int list=0x7f020011;
-        public static final int list_back=0x7f020012;
-        public static final int list_selected=0x7f020013;
-        public static final int not_favorite_grey=0x7f020014;
-        public static final int not_favorite_white=0x7f020015;
-        public static final int rss=0x7f020016;
-        public static final int rss_gray=0x7f020017;
-        public static final int rss_icon=0x7f020018;
-        public static final int rss_icons=0x7f020019;
-        public static final int settings=0x7f02001a;
-        public static final int toggle_selector=0x7f02001b;
+        public static final int big_rss=0x7f020000;
+        public static final int default_image=0x7f020001;
+        public static final int favorite=0x7f020002;
+        public static final int favorite_grey=0x7f020003;
+        public static final int favorite_white=0x7f020004;
+        public static final int grid=0x7f020005;
+        public static final int grid_back=0x7f020006;
+        public static final int grid_gray=0x7f020007;
+        public static final int grid_selected=0x7f020008;
+        public static final int grid_white=0x7f020009;
+        public static final int heart=0x7f02000a;
+        public static final int heart_shape=0x7f02000b;
+        public static final int ic_action_favorite=0x7f02000c;
+        public static final int ic_action_refresh=0x7f02000d;
+        public static final int ic_action_share=0x7f02000e;
+        public static final int ic_launcher=0x7f02000f;
+        public static final int icon=0x7f020010;
+        public static final int infav=0x7f020011;
+        public static final int list=0x7f020012;
+        public static final int list_back=0x7f020013;
+        public static final int list_selected=0x7f020014;
+        public static final int not_favorite_grey=0x7f020015;
+        public static final int not_favorite_white=0x7f020016;
+        public static final int rss=0x7f020017;
+        public static final int rss_gray=0x7f020018;
+        public static final int rss_icon=0x7f020019;
+        public static final int rss_icons=0x7f02001a;
+        public static final int settings=0x7f02001b;
+        public static final int toggle_selector=0x7f02001c;
     }
     public static final class id {
         public static final int action_search=0x7f0a0020;
@@ -111,7 +112,7 @@ public final class R {
         public static final int cleanLabel=0x7f0a001b;
         public static final int gdPosts=0x7f0a0005;
         public static final int imCategoryImage=0x7f0a0001;
-        public static final int imFavorite=0x7f0a000f;
+        public static final int imFavorite=0x7f0a0010;
         public static final int imPost=0x7f0a0011;
         public static final int imPostImage=0x7f0a000c;
         public static final int itemFavorite=0x7f0a0022;
@@ -133,7 +134,7 @@ public final class R {
         public static final int tvDate=0x7f0a000b;
         public static final int tvMode=0x7f0a0019;
         public static final int tvPostText=0x7f0a000d;
-        public static final int tvText=0x7f0a0010;
+        public static final int tvText=0x7f0a000f;
         public static final int tvTitle=0x7f0a000a;
         public static final int tvUrl=0x7f0a000e;
     }
@@ -157,23 +158,24 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f060002;
         public static final int app_name=0x7f060000;
-        public static final int clean=0x7f060009;
-        public static final int clean_cache=0x7f06000a;
-        public static final int clean_favorite=0x7f06000b;
-        public static final int fav_category=0x7f060011;
+        public static final int clean=0x7f06000a;
+        public static final int clean_cache=0x7f06000b;
+        public static final int clean_favorite=0x7f06000c;
+        public static final int fav_category=0x7f060012;
         public static final int favorite=0x7f060005;
         public static final int hello_world=0x7f060001;
         public static final int loading=0x7f060004;
-        public static final int mode=0x7f06000d;
+        public static final int mode=0x7f06000e;
+        public static final int net_message=0x7f060007;
         public static final int refresh=0x7f060003;
-        public static final int remove=0x7f06000c;
-        public static final int set_category=0x7f060012;
+        public static final int remove=0x7f06000d;
+        public static final int set_category=0x7f060013;
         public static final int share=0x7f060006;
-        public static final int show_images=0x7f06000e;
-        public static final int theme=0x7f060007;
-        public static final int theme_turn=0x7f060008;
-        public static final int today=0x7f06000f;
-        public static final int yesterday=0x7f060010;
+        public static final int show_images=0x7f06000f;
+        public static final int theme=0x7f060008;
+        public static final int theme_turn=0x7f060009;
+        public static final int today=0x7f060010;
+        public static final int yesterday=0x7f060011;
     }
     public static final class style {
         public static final int ActionBarTheme=0x7f080002;

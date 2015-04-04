@@ -125,7 +125,7 @@ private boolean isChanged=false;
 			if (postFragment != null) {
 
 				postFragment.setStartContent(null,false);
-				//postFragment.resetTheme();
+				postFragment.resetTheme();
 				
 			}
 			MenuFragment menuFragment=(MenuFragment)getFragmentManager().findFragmentById(R.id.leftpane);

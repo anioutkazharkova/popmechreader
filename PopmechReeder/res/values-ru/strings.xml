@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Механика RssReader</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Настройки</string>
+    <string name="refresh">Обновить</string>
+    <string name="loading">Загрузка...</string>
+    <string name="favorite">Избранное</string>
+    <string name="share">Поделиться</string>
+    
+    <string name="net_message">Не удалось загрузить данные. Попробуйте немного позже</string>
+    <string name="theme">Настройки темы</string>
+    <string name="theme_turn">Включить "Ночной режим"</string>
+    <string name="clean">Очистка кэша и архива</string>
+    <string name="clean_cache">Очистить кэш</string>
+    <string name="clean_favorite">Удалить избранное</string>
+    <string name="remove">Удалить</string>
+    <string name="mode">Режим отображения</string>
+    <string name="show_images">Показывать изображения</string>
+    
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+
+    <string name="fav_category">Избранное</string>
+    <string name="set_category">Настройки</string>
+    
+    <string-array name="links">
+        <item></item>
+        <item>http://www.popmech.ru/out/public-all.xml</item>
+        <item>http://www.popmech.ru/out/public-science.xml</item>
+        <item>http://www.popmech.ru/out/public-weapon.xml</item>
+        <item>http://www.popmech.ru/out/public-technologies.xml</item>
+        <item>http://www.popmech.ru/out/public-vehicles.xml</item>
+        <item>http://www.popmech.ru/out/public-gadgets.xml</item>
+        <item>http://www.popmech.ru/out/public-lectures-popular.xml</item>
+        <item>http://www.popmech.ru/out/public-commercial.xml</item>
+        <item>http://www.popmech.ru/out/public-auto-oil.xml</item>
+        <item>http://www.popmech.ru/out/public-editorial-workaday-routine.xml</item>
+        <item>http://www.popmech.ru/out/public-history.xml</item>
+        <item>http://www.popmech.ru/out/public-made-in-russia.xml</item>
+        <item>http://www.popmech.ru/out/public-adrenalin.xml</item>
+        <item>http://www.popmech.ru/out/public-master-class.xml</item>
+        <item>http://www.popmech.ru/out/public-personality.xml</item>
+        <item>http://www.popmech.ru/out/public-artefact.xml</item>
+        <item>http://www.popmech.ru/out/public-fiction.xml</item>
+        <item>http://www.popmech.ru/out/public-games.xml</item>
+        <item>http://www.popmech.ru/out/public-announcements.xml</item>
+        <item>http://www.popmech.ru/out/public-humour.xml</item>        
+    </string-array>
+    
+   <string-array name="categories">
+       <item>Избранное</item>
+       <item>Все статьи</item>
+       <item>Наука</item>
+       <item>Оружие</item>
+       <item>Технологии</item>
+       <item>Автомобили</item>
+       <item>Гаджеты</item>
+       <item>Популярный лекторий</item>
+       <item>Реклама</item>
+       <item>Анатомия авто</item>
+       <item>Будни редакции</item>
+       <item>История</item>
+       <item>Сделано в России</item>
+       <item>Адреналин</item>
+       <item>Мастер-класс</item>
+       <item>Личность</item>
+       <item>Артефакт</item>
+       <item>Фантастика</item>
+       <item>Игры</item>
+       <item>Объявления</item>
+       <item>Юмор</item>
+   </string-array>
+</resources>

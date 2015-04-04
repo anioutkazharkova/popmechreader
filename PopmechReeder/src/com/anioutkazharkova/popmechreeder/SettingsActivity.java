@@ -133,6 +133,11 @@ public class SettingsActivity extends Activity {
 		chbTheme.setChecked(!Utility.IS_LIGHT);
 		chMode.setChecked(!Utility.IS_LIST);
 		chbImages.setChecked(Utility.IS_SHOW_IMAGES);
+		
+			layoutMode.setEnabled(Utility.IS_SHOW_IMAGES);
+			themeTurnLabel.setEnabled(Utility.IS_SHOW_IMAGES);
+			chMode.setEnabled(Utility.IS_SHOW_IMAGES);
+		
 		setTheme(Utility.IS_LIGHT);
 
 		getActionBar().setHomeButtonEnabled(true);

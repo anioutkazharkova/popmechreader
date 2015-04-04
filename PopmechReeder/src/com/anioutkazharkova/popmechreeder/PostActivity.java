@@ -187,7 +187,7 @@ protected void onResume() {
 	        share.putExtra(Intent.EXTRA_SUBJECT, currentPost.getTitle());
 	        share.putExtra(Intent.EXTRA_TEXT, currentPost.getLink());
 	 
-	        startActivity(Intent.createChooser(share, "Поделиться"));
+	        startActivity(Intent.createChooser(share, getResources().getString(R.string.share)));
 	    }
 	
 	private void removeFromFavorite() {
